@@ -2,11 +2,12 @@
 modLoader="javafml" #mandatory
 
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[28,)" #mandatory (28 is current forge version)
+loaderVersion="[36,)" #mandatory (28 is current forge version)
 
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/thraaawn/libnonymous/issues/" #optional
 
+license="MIT"
 
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
@@ -34,6 +35,7 @@ displayName="Libnonymous" #mandatory
 # A text field displayed in the mod UI
 authors="Davenonymous" #optional
 
+
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Library mod that makes some things easier. Notable features include
@@ -52,7 +54,7 @@ gui widget framework.
     mandatory=true #mandatory
 
     # The version range of the dependency
-    versionRange="[31,)" #mandatory
+    versionRange="[36,)" #mandatory
 
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
@@ -64,6 +66,6 @@ gui widget framework.
 [[dependencies.libnonymous]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.5]"
     ordering="NONE"
     side="BOTH"

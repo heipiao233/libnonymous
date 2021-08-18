@@ -1,9 +1,10 @@
 package com.davenonymous.libnonymous.base;
 
-import com.davenonymous.libnonymous.serialization.FieldUtils;
 import com.davenonymous.libnonymous.serialization.nbt.NBTFieldSerializationData;
 import com.davenonymous.libnonymous.serialization.Store;
 import com.davenonymous.libnonymous.serialization.nbt.NBTFieldUtils;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -85,8 +86,8 @@ public class BaseTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
 
         NBTFieldUtils.readFieldsFromNBT(NBTActions, this, compound, data -> true);
     }
@@ -183,7 +184,7 @@ public class BaseTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     public boolean isWaterlogged() {
-        if(!this.world.getBlockState(this.getPos()).has(BlockStateProperties.WATERLOGGED)) {
+        if(!this.world.getBlockState(this.getPos()).hasProperty(BlockStateProperties.WATERLOGGED)) {
             return false;
         }
 

@@ -5,15 +5,13 @@ import com.davenonymous.libnonymous.gui.framework.event.KeyPressedEvent;
 import com.davenonymous.libnonymous.gui.framework.event.MouseClickEvent;
 import com.davenonymous.libnonymous.gui.framework.event.WidgetEventResult;
 import com.google.common.base.Predicates;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.SharedConstants;
@@ -88,16 +86,16 @@ public class WidgetInputField extends WidgetWithValue<String> {
     }
 
     @Override
-    public void draw(Screen screen) {
-        super.draw(screen);
+    public void draw(MatrixStack stack, Screen screen) {
+        super.draw(stack, screen);
 
         int renderX = 0;
         int renderY = 0;
 
         if (this.isVisible()) {
             if (this.enableBackgroundDrawing) {
-                fill(renderX - 1, renderY - 1, renderX + this.width + 1, renderY + this.height + 1, -6250336);
-                fill(renderX, renderY, renderX + this.width, renderY + this.height, -16777216);
+                fill(stack, renderX - 1, renderY - 1, renderX + this.width + 1, renderY + this.height + 1, -6250336);
+                fill(stack, renderX, renderY, renderX + this.width, renderY + this.height, -16777216);
             }
 
             int i = this.enabled ? this.enabledColor : this.disabledColor;
@@ -115,7 +113,7 @@ public class WidgetInputField extends WidgetWithValue<String> {
 
             if (!s.isEmpty()) {
                 String s1 = flag ? s.substring(0, j) : s;
-                j1 = this.fontRenderer.drawStringWithShadow(this.textFormatter.apply(s1, this.lineScrollOffset), (float)l, (float)i1, i);
+                j1 = this.fontRenderer.drawStringWithShadow(stack, this.textFormatter.apply(s1, this.lineScrollOffset), (float)l, (float)i1, i);
             }
 
             boolean flag2 = this.cursorPosition < this.value.length() || this.value.length() >= this.maxStringLength;
@@ -128,18 +126,18 @@ public class WidgetInputField extends WidgetWithValue<String> {
             }
 
             if (!s.isEmpty() && flag && j < s.length()) {
-                this.fontRenderer.drawStringWithShadow(this.textFormatter.apply(s.substring(j), this.cursorPosition), (float)j1, (float)i1, i);
+                this.fontRenderer.drawStringWithShadow(stack, this.textFormatter.apply(s.substring(j), this.cursorPosition), (float)j1, (float)i1, i);
             }
 
             if (!flag2 && this.suggestion != null) {
-                this.fontRenderer.drawStringWithShadow(this.suggestion, (float)(k1 - 1), (float)i1, -8355712);
+                this.fontRenderer.drawStringWithShadow(stack, this.suggestion, (float)(k1 - 1), (float)i1, -8355712);
             }
 
             if (flag1) {
                 if (flag2) {
-                    fill(k1, i1 - 1, k1 + 1, i1 + 1 + 9, -3092272);
+                    fill(stack, k1, i1 - 1, k1 + 1, i1 + 1 + 9, -3092272);
                 } else {
-                    this.fontRenderer.drawStringWithShadow("_", (float)k1, (float)i1, i);
+                    this.fontRenderer.drawStringWithShadow(stack, "_", (float)k1, (float)i1, i);
                 }
             }
 
@@ -539,7 +537,7 @@ public class WidgetInputField extends WidgetWithValue<String> {
             String s = this.fontRenderer.trimStringToWidth(this.value.substring(this.lineScrollOffset), j);
             int k = s.length() + this.lineScrollOffset;
             if (this.selectionEnd == this.lineScrollOffset) {
-                this.lineScrollOffset -= this.fontRenderer.trimStringToWidth(this.value, j, true).length();
+                this.lineScrollOffset -= this.fontRenderer.trimStringToWidth(this.value, j).length();
             }
 
             if (this.selectionEnd > k) {

@@ -5,7 +5,7 @@ import com.davenonymous.libnonymous.gui.framework.GUI;
 import com.davenonymous.libnonymous.gui.framework.event.MouseClickEvent;
 import com.davenonymous.libnonymous.gui.framework.event.TabChangedEvent;
 import com.davenonymous.libnonymous.gui.framework.event.WidgetEventResult;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -148,8 +148,8 @@ public class WidgetTabsPanel extends WidgetPanel {
         }
 
         @Override
-        public void draw(Screen screen) {
-            RenderSystem.pushMatrix();
+        public void draw(MatrixStack stack, Screen screen) {
+            stack.push();
 
             screen.getMinecraft().getTextureManager().bindTexture(GUI.tabIcons);
 
@@ -196,7 +196,7 @@ public class WidgetTabsPanel extends WidgetPanel {
             screen.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(pageStack, iconX, iconY);
             RenderHelper.enableStandardItemLighting();
 
-            RenderSystem.popMatrix();
+            stack.pop();
         }
     }
 }

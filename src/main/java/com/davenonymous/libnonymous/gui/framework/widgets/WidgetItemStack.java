@@ -1,6 +1,7 @@
 package com.davenonymous.libnonymous.gui.framework.widgets;
 
 import com.davenonymous.libnonymous.gui.framework.GUI;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -36,8 +37,8 @@ public class WidgetItemStack extends WidgetWithValue<ItemStack> {
     }
 
     @Override
-    public void draw(Screen screen) {
-        super.draw(screen);
+    public void draw(MatrixStack stack, Screen screen) {
+        super.draw(stack, screen);
 
         if(drawSlot) {
             this.drawSlot(screen);
@@ -47,7 +48,7 @@ public class WidgetItemStack extends WidgetWithValue<ItemStack> {
             return;
         }
 
-        RenderSystem.pushMatrix();
+        stack.push();
 
         RenderSystem.disableLighting();
         RenderSystem.color3f(1F, 1F, 1F); //Forge: Reset color in case Items change it.
@@ -61,7 +62,7 @@ public class WidgetItemStack extends WidgetWithValue<ItemStack> {
         Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(this.value, 0, 0);
         RenderHelper.disableStandardItemLighting();
 
-        RenderSystem.popMatrix();
+        stack.pop();
     }
 
     private void drawSlot(Screen screen) {

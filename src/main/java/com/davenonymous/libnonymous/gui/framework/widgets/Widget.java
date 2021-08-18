@@ -2,6 +2,7 @@ package com.davenonymous.libnonymous.gui.framework.widgets;
 
 import com.davenonymous.libnonymous.gui.framework.GUI;
 import com.davenonymous.libnonymous.gui.framework.event.*;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -68,7 +69,7 @@ public class Widget {
     }
 
     public List<String> getTooltipAsString() {
-        return getTooltip().stream().map(t -> t.getFormattedText()).collect(Collectors.toList());
+        return getTooltip().stream().map(t -> t.getString()).collect(Collectors.toList());
     }
 
     public List<ITextComponent> getTooltip() {
@@ -227,14 +228,15 @@ public class Widget {
      *
      * Do not override this. Override the draw() method instead.
      *
+     * @param stack
      * @param screen
      */
-    public void shiftAndDraw(Screen screen) {
+    public void shiftAndDraw(MatrixStack stack, Screen screen) {
         this.drawBeforeShift(screen);
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(this.x, this.y, 0);
-        this.draw(screen);
-        RenderSystem.popMatrix();
+        stack.push();
+        stack.translate(this.x, this.y, 0);
+        this.draw(stack, screen);
+        stack.pop();
     }
 
     /**
@@ -256,7 +258,7 @@ public class Widget {
      *
      * @param screen
      */
-    public void draw(Screen screen) {
+    public void draw(MatrixStack stack, Screen screen) {
         //Logz.debug("Drawing widget: %s, x=%d, y=%d, width=%d, height=%d", this, layoutResult.getX(), layoutResult.getY(), layoutResult.getWidth(), layoutResult.getHeight());
     }
 

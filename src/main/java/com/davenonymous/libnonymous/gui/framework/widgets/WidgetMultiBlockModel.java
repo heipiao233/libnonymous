@@ -17,6 +17,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.math.vector.Quaternion;
+
 import org.lwjgl.opengl.GL11;
 
 public class WidgetMultiBlockModel extends Widget {
@@ -27,10 +29,10 @@ public class WidgetMultiBlockModel extends Widget {
     }
 
     @Override
-    public void draw(Screen screen) {
+    public void draw(MatrixStack stack, Screen screen) {
         float angle = RenderTickCounter.renderTicks * 45.0f / 128.0f;
 
-        RenderSystem.pushMatrix();
+        stack.push();
 
         // Init RenderSystem
         RenderSystem.enableAlphaTest();
@@ -57,28 +59,28 @@ public class WidgetMultiBlockModel extends Widget {
         RenderSystem.disableRescaleNormal();
 
         // Bring to front
-        RenderSystem.translatef(0F, 0F, 216.5F);
+        stack.translate(0F, 0F, 216.5F);
 
-        double scaledWidth = this.width * 1.4d;
+        float scaledWidth = this.width * 1.4f;
         double scaledHeight = this.height * 1.4d;
 
-        RenderSystem.translated(scaledWidth / 2.0f, scaledHeight / 2.0f, 0.0d);
+        stack.translate(scaledWidth / 2.0f, scaledHeight / 2.0f, 0.0d);
 
         // Shift it a bit down so one can properly see 3d
-        RenderSystem.rotatef(-25.0f, 1.0f, 0.0f, 0.0f);
+        stack.rotate(new Quaternion(-25.0f, 1.0f, 0.0f, 0.0f));
 
         // Rotate per our calculated time
-        RenderSystem.rotatef(angle, 0.0f, 1.0f, 0.0f);
+        stack.rotate(new Quaternion(angle, 0.0f, 1.0f, 0.0f));
 
-        double scale = model.getScaleRatio(true);
-        RenderSystem.scaled(scale, scale, scale);
+        float scale = (float)model.getScaleRatio(true);
+        stack.scale(scale, scale, scale);
 
-        RenderSystem.scaled(scaledWidth, scaledWidth, scaledWidth);
+        stack.scale(scaledWidth, scaledWidth, scaledWidth);
 
 
-        RenderSystem.rotatef(180.0f, 1.0f, 0.0f, 0.0f);
+        stack.rotate(new Quaternion(180.0f, 1.0f, 0.0f, 0.0f));
 
-        RenderSystem.translatef(
+        stack.translate(
                 (model.width + 1) / -2.0f,
                 (model.height + 1) / -2.0f,
                 (model.depth + 1) / -2.0f
@@ -94,7 +96,7 @@ public class WidgetMultiBlockModel extends Widget {
         IRenderTypeBuffer buffer = IRenderTypeBuffer.getImpl(builder);
 
         // TODO: Do not render with players position
-        MultiblockBlockModelRenderer.renderModel(this.model, new MatrixStack(), buffer, 15728880,  OverlayTexture.DEFAULT_LIGHT, Libnonymous.proxy.getClientWorld(), Libnonymous.proxy.getClientPlayer().getPosition());
+        MultiblockBlockModelRenderer.renderModel(this.model, new MatrixStack(), buffer, 15728880,  OverlayTexture.NO_OVERLAY, Libnonymous.proxy.getClientWorld(), Libnonymous.proxy.getClientPlayer().getPosition());
 
         textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
         textureManager.getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
@@ -105,6 +107,6 @@ public class WidgetMultiBlockModel extends Widget {
 
         RenderSystem.disableBlend();
 
-        RenderSystem.popMatrix();
+        stack.pop();
     }
 }

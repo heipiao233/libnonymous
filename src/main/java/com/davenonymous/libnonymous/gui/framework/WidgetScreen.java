@@ -1,10 +1,9 @@
 package com.davenonymous.libnonymous.gui.framework;
 
 import com.davenonymous.libnonymous.gui.framework.event.*;
-import com.davenonymous.libnonymous.utils.Logz;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -88,8 +87,8 @@ public abstract class WidgetScreen extends Screen {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.render(stack, mouseX, mouseY, partialTicks);
 
         if(mouseX != previousMouseX || mouseY != previousMouseY) {
             getOrCreateGui().fireEvent(new MouseMoveEvent(mouseX, mouseY));
@@ -98,15 +97,15 @@ public abstract class WidgetScreen extends Screen {
             previousMouseY = mouseY;
         }
 
-        getOrCreateGui().drawGUI(this);
-        getOrCreateGui().drawTooltips(this, mouseX, mouseY);
+        getOrCreateGui().drawGUI(stack, this);
+        getOrCreateGui().drawTooltips(stack, this, mouseX, mouseY);
         //renderHoveredToolTip(mouseX, mouseY);
         RenderHelper.disableStandardItemLighting();
     }
 
     @Override
-    public void renderBackground() {
-        super.renderBackground();
+    public void renderBackground(MatrixStack stack) {
+        super.renderBackground(stack);
         // Draw default background?
     }
 

@@ -2,7 +2,7 @@ package com.davenonymous.libnonymous.gui.framework;
 
 
 import com.davenonymous.libnonymous.gui.framework.event.*;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -95,7 +95,7 @@ public abstract class WidgetContainerScreen<T extends WidgetContainer> extends C
     */
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         if(dataUpdated) {
             dataUpdated = false;
             gui.fireEvent(new GuiDataUpdatedEvent());
@@ -108,24 +108,24 @@ public abstract class WidgetContainerScreen<T extends WidgetContainer> extends C
             previousMouseY = mouseY;
         }
 
-        super.render(mouseX, mouseY, partialTicks);
+        super.render(stack, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
 
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(-guiLeft, -guiTop+18, 0.0f);
-        gui.drawTooltips(this, mouseX, mouseY);
-        renderHoveredToolTip(mouseX, mouseY);
-        RenderSystem.popMatrix();
+        stack.push();
+        stack.translate(-guiLeft, -guiTop+18, 0.0f);
+        gui.drawTooltips(stack, this, mouseX, mouseY);
+        renderHoveredTooltip(stack, mouseX, mouseY);
+        stack.pop();
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        this.renderBackground();
-        gui.drawGUI(this);
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground(stack);
+        gui.drawGUI(stack, this);
 
         if(this.container != null && this.container.inventorySlots != null) {
             for(Slot slot : this.container.inventorySlots) {
@@ -133,7 +133,7 @@ public abstract class WidgetContainerScreen<T extends WidgetContainer> extends C
                     continue;
                 }
 
-                gui.drawSlot(this, slot, guiLeft, guiTop);
+                gui.drawSlot(stack, this, slot, guiLeft, guiTop);
             }
         }
     }

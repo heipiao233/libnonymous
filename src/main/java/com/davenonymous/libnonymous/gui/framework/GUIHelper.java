@@ -1,6 +1,7 @@
 package com.davenonymous.libnonymous.gui.framework;
 
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.FontRenderer;
@@ -13,13 +14,11 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 
 public class GUIHelper {
-    public static void drawSplitStringCentered(String str, Screen screen, int x, int y, int width, int color) {
+    public static void drawSplitStringCentered(MatrixStack stack, String str, Screen screen, int x, int y, int width, int color) {
         FontRenderer renderer = screen.getMinecraft().fontRenderer;
         int yOffset = 0;
-        for(String row : renderer.listFormattedStringToWidth(str, width)) {
-            screen.drawCenteredString(renderer, row, x + width/2, y + yOffset, color);
-            yOffset += renderer.FONT_HEIGHT;
-        }
+        Screen.drawCenteredString(stack, renderer, str, x + width/2, y + yOffset, color);
+        yOffset += renderer.FONT_HEIGHT;
     }
 
     public static void drawColoredRectangle(int x, int y, int width, int height, int argb) {

@@ -1,11 +1,10 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -170,6 +169,7 @@ publishing {
     }
     repositories {
         maven {
+            name = "local"
             url "file:///${project.projectDir}/mcmodsrepo"
         }
         maven {
@@ -181,7 +181,7 @@ publishing {
             }
         }
         maven {
-            name = "davenonymous maven"
+            name = "davenonymous_maven"
             url = uri("http://maven.davenonymous.com/repository/maven-releases")
             credentials {
                 username = System.getenv("DAVE_MAVEN_USER")

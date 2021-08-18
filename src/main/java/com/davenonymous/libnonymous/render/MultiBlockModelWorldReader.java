@@ -2,11 +2,11 @@ package com.davenonymous.libnonymous.render;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.lighting.ILightListener;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biome;
@@ -17,7 +17,7 @@ import net.minecraft.world.lighting.WorldLightManager;
 
 import javax.annotation.Nullable;
 
-public class MultiBlockModelWorldReader implements IBlockReader, BiomeManager.IBiomeReader, ILightReader {
+public class MultiBlockModelWorldReader implements IBlockReader, BiomeManager.IBiomeReader {
     private MultiblockBlockModel model;
 
     private IWorldReader blockWorld;
@@ -34,7 +34,7 @@ public class MultiBlockModelWorldReader implements IBlockReader, BiomeManager.IB
     }
 
     public Biome getBiome(BlockPos pos) {
-        return blockWorld == null ? Biomes.FOREST : blockWorld.getBiome(blockPos);
+        return blockWorld == null ? null : blockWorld.getBiome(blockPos);
     }
 
 
@@ -46,21 +46,21 @@ public class MultiBlockModelWorldReader implements IBlockReader, BiomeManager.IB
         return blockPos;
     }
 
-    @Override
-    public WorldLightManager getLightManager() {
-        // TODO: blockworld might be null, what lightmanager do we use then?
-        return blockWorld.getLightManager();
-    }
+    // @Override
+    // public WorldLightManager getLightManager() {
+    //     // TODO: blockworld might be null, what lightmanager do we use then?
+    //     return blockWorld.getLightManager();
+    // }
 
-    @Override
-    public int getBlockColor(BlockPos blockPosIn, ColorResolver colorResolverIn) {
-        return 0;
-    }
+    // @Override
+    // public int getBlockColor(BlockPos blockPosIn, ColorResolver colorResolverIn) {
+    //     return 0;
+    // }
 
-    @Override
-    public int getLightFor(LightType type, BlockPos pos) {
-        return blockWorld == null ? type.defaultLightValue : blockWorld.getLightFor(type, blockPos);
-    }
+    // @Override
+    // public int getLightFor(LightType type, BlockPos pos) {
+    //     return blockWorld == null ? type.defaultLightValue : blockWorld.getLightFor(type, blockPos);
+    // }
 
     @Nullable
     @Override
@@ -77,7 +77,7 @@ public class MultiBlockModelWorldReader implements IBlockReader, BiomeManager.IB
     }
 
     @Override
-    public IFluidState getFluidState(BlockPos pos) {
+    public FluidState getFluidState(BlockPos pos) {
         // TODO: ???
         return null;
     }

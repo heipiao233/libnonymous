@@ -6,6 +6,7 @@ import com.davenonymous.libnonymous.gui.framework.event.MouseClickEvent;
 import com.davenonymous.libnonymous.gui.framework.event.MouseEnterEvent;
 import com.davenonymous.libnonymous.gui.framework.event.MouseExitEvent;
 import com.davenonymous.libnonymous.gui.framework.event.WidgetEventResult;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
@@ -60,13 +61,13 @@ public class WidgetButton extends Widget {
     }
 
     @Override
-    public void draw(Screen screen) {
+    public void draw(MatrixStack stack, Screen screen) {
         //Logz.info("Width: %d, height: %d", width, height);
 
-        RenderSystem.pushMatrix();
+        stack.push();
         RenderSystem.enableBlend();
         RenderSystem.enableAlphaTest();
-        RenderSystem.translatef(0.0f, 0.0f, 2.0f);
+        stack.translate(0.0f, 0.0f, 2.0f);
 
         // Draw the background
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -117,9 +118,9 @@ public class WidgetButton extends Widget {
         GUIHelper.drawStretchedTexture(0+width - 4, 4, 4, this.height - 8, texOffsetX + overlayWidth - 4, texOffsetY + 3, 4, 12);
 
         FontRenderer fontrenderer = screen.getMinecraft().fontRenderer;
-        RenderSystem.translatef(0.0f, 0.0f, 10.0f);
-        drawButtonContent(screen, fontrenderer);
-        RenderSystem.translatef(0.0f, 0.0f, -10.0f);
+        stack.translate(0.0f, 0.0f, 10.0f);
+        drawButtonContent(stack,screen, fontrenderer);
+        stack.translate(0.0f, 0.0f, -10.0f);
 
         if(!enabled) {
             GUIHelper.drawColoredRectangle(1, 1, width-2, height-2, 0x80000000);
@@ -127,16 +128,16 @@ public class WidgetButton extends Widget {
             GUIHelper.drawColoredRectangle(1, 1, width-2, height-2, 0x808090FF);
         }
 
-        RenderSystem.popMatrix();
+        stack.pop();
     }
 
-    protected void drawButtonContent(Screen screen, FontRenderer renderer) {
-        drawString(screen, renderer);
+    protected void drawButtonContent(MatrixStack stack, Screen screen, FontRenderer renderer) {
+        drawString(stack, screen, renderer);
     }
 
-    protected void drawString(Screen screen, FontRenderer renderer) {
+    protected void drawString(MatrixStack stack, Screen screen, FontRenderer renderer) {
         int color = 0xFFFFFF;
-        screen.drawCenteredString(renderer, unlocalizedLabel, width / 2, (height - 8) / 2, color);
+        Screen.drawCenteredString(stack, renderer, unlocalizedLabel, width / 2, (height - 8) / 2, color);
     }
 
     /**
